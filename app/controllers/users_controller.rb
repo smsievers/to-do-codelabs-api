@@ -1,51 +1,24 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :update, :destroy]
-
-  # GET /users
-  def index
-    @users = User.all
-
-    render json: @users
-  end
-
-  # GET /users/1
-  def show
-    render json: @user
-  end
-
-  # POST /users
-  def create
-    @user = User.new(user_params)
-
-    if @user.save
-      render json: @user, status: :created, location: @user
-    else
-      render json: @user.errors, status: :unprocessable_entity
+    skip_before_action :authenticate, only: [:login, :create], raise: false
+    
+    def login
+      render json: {error: "User not authenticated" }, status: 401 and return unless @user = UsersService.login(params[:email], params[:password])
+      render json: @user.profile, status: :ok
+    end 
+  
+    def create 
+      @user = UsersService.register(params[:email], params[:first_name], params[:last_name], params[:username], params[:password], params[:password_confirmation])
+      render json: { error: "There was a problem saving your user." }, status: :unprocessable_entity and return unless @user
+      render json: @user.profile, status: :ok
     end
-  end
-
-  # PATCH/PUT /users/1
-  def update
-    if @user.update(user_params)
-      render json: @user
-    else
-      render json: @user.errors, status: :unprocessable_entity
+  
+    def logout
+      render json: { error: "There was a problem logging out" }, status: :unprocessable_entity and return unless UsersService.logout(@current_user)
+      render json: { success: "You have been logged out" }, status: :ok
     end
-  end
-
-  # DELETE /users/1
-  def destroy
-    @user.destroy
-  end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
+  
+    def me
+      render json: @current_user.profile, status: :ok
     end
-
-    # Only allow a trusted parameter "white list" through.
-    def user_params
-      params.require(:user).permit(:first_name, :last_name, :email, :username, :password, :password_confirmation)
-    end
-end
+  
+  end

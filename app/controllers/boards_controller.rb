@@ -3,8 +3,8 @@ class BoardsController < ApplicationController
     skip_before_action :authenticate, only: [:index, :show]
 
     def index
-        @boards = Boards.all 
-        render json: { boards: @boards }
+        @boards = Board.all 
+        render json: {boards: @boards} 
     end
 
     def show

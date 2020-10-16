@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_08_232906) do
+ActiveRecord::Schema.define(version: 2020_10_13_151243) do
 
   create_table "boards", force: :cascade do |t|
     t.string "title"
@@ -38,10 +38,10 @@ ActiveRecord::Schema.define(version: 2020_10_08_232906) do
   create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
-    t.string "email"
     t.string "username"
-    t.string "password"
-    t.string "password_confirmation"
+    t.string "email"
+    t.string "password_digest"
+    t.string "token"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
