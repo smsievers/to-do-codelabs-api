@@ -8,6 +8,7 @@ class BoardsController < ApplicationController
     end
 
     def show
+        puts @board
         render json:  @board, :include => { :lists=> {include: [:cards]} }
     end
 

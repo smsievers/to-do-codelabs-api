@@ -8,7 +8,11 @@ class ListsController < ApplicationController
     end
 
     def create
+        puts "hello"
         @list = List.new(list_params)
+        @list.errors.each do |err|
+            puts err
+        end
         if @list.save
             render json: @list
         else
@@ -36,7 +40,7 @@ class ListsController < ApplicationController
     end
 
     def list_params
-        params.require(:list).permit(:title)
+        params.require(:list).permit(:title, :board_id)
     end
 
 end
